@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm run start:user-service\" \"npm run start:gateway-service\"",
+    "start": "concurrently \"npm run start:user-service\" \"npm run start:gateway-service\" \"npm run start:file-service\"",
     "start:gateway-service": "cd gateway-service && npm start",
-    "start:user-service": "cd user-service && npm start"
+    "start:user-service": "cd user-service && npm start",
+    "start:file-service": "cd file-service && npm start"
   },
   "keywords": [],
   "author": "",
