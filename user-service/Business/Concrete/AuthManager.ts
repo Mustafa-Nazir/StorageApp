@@ -36,7 +36,7 @@ export default class AuthManager implements IAuthService {
         } as IUser;
 
         await this._userService.Add(user);
-        return new SuccessResult();
+        return new SuccessResult("Registration process was successfully completed");
     }
     public async Login(userForLoginDto: IUserForLoginDto): Promise<IDataResult<IAccessToken>> {
         const result = await this._userService.GetByEmail(userForLoginDto.email);
