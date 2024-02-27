@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import authRouter from "./Api/Concrete/Routers/AuthRouter";
+import libraryRouter from "./Api/Concrete/Routers/LibraryRouter";
 import MsStorageAppDb from "./DataAccess/Concrete/Mongoose/MsStorageAppDb";
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/auth", authRouter);
+app.use("/library", libraryRouter);
 
 const PORT = process.env.PORT || 8000;
 

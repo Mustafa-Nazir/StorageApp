@@ -1,0 +1,10 @@
+import IDataResult from "../../Core/Utilities/Results/Abstract/IDataResult";
+import IResult from "../../Core/Utilities/Results/Abstract/IResult";
+import ILibrary from "../../Models/Abstract/ILibrary";
+
+export default interface ILibraryService{
+    Add(library:ILibrary):Promise<IDataResult<string>>;
+    GetByOwnerId(id:string):Promise<IDataResult<ILibrary>>;
+    AddDepartment(library:ILibrary):Promise<IResult>;
+    GetById(id:string):Promise<IDataResult<ILibrary>>;
+}
