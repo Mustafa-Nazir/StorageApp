@@ -4,12 +4,15 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import userRouter from "./Api/Concrete/Routers/UserServiceRouter";
 import fileRouter from "./Api/Concrete/Routers/FileServiceRouter";
+import { TokenControl } from "./Api/Concrete/Middlewares/AuthMiddleware";
 
 dotenv.config();
 
 const app = express();
 
 app.use(cors());
+
+app.use((req,res,next) => {TokenControl(req,res,next)});
 
 app.use(userRouter);
 app.use(fileRouter);
