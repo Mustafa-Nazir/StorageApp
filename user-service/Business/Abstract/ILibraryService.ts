@@ -7,4 +7,5 @@ export default interface ILibraryService{
     GetByOwnerId(id:string):Promise<IDataResult<ILibrary>>;
     AddDepartment(library:ILibrary):Promise<IResult>;
     GetById(id:string):Promise<IDataResult<ILibrary>>;
+    GetAllByUserId(id:string):Promise<IDataResult<ILibrary[]>>;
 }

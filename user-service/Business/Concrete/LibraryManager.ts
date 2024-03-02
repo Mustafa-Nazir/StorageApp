@@ -17,6 +17,11 @@ export default class LibraryManager implements ILibraryService{
         this._libraryDal = libraryDal;
     }
     
+    public async GetAllByUserId(id: string): Promise<IDataResult<ILibrary[]>> {
+        const data = await this._libraryDal.GetAll({ownerId:id});
+        return new SuccessDataResult<ILibrary[]>(data);
+    }
+    
     public async GetById(id: string): Promise<IDataResult<ILibrary>> {
         const data = await this._libraryDal.Get({_id:id});
         if(data == null) return new ErrorDataResult<ILibrary>(undefined,"The library is not found");
