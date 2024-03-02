@@ -11,12 +11,17 @@ export const TokenControl = async (req: any, res: any, next: any) => {
         const token = getTokenFromHeader(authorization);
 
         const tokenLog = getTokenLog(token);
-        if (tokenLog != null) return next();
+        const newHeader = "user-email";
+        if (tokenLog != null) {
+            req.headers[newHeader] = tokenLog.email;
+            return next();
+        }
 
         const result = await tokenControlRequest(authorization);
         if (!result.success) return res.status(401).send(result);
 
         addTokenLog({ token: token, ...result.data });
+        req.headers[newHeader] = result.data.email;
         return next();
 
 
