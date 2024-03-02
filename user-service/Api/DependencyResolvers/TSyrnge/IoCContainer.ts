@@ -11,6 +11,7 @@ import MsLibraryDal from "../../../DataAccess/Concrete/Mongoose/MsLibraryDal";
 import ILibraryService from "../../../Business/Abstract/ILibraryService";
 import LibraryManager from "../../../Business/Concrete/LibraryManager";
 import LibraryController from "../../Concrete/Controllers/LibraryController";
+import UserController from "../../Concrete/Controllers/UserController";
 
 container.registerSingleton<IAuthService>("IAuthService", AuthManager);
 
@@ -22,5 +23,6 @@ container.registerSingleton<ILibraryService>("ILibraryService", LibraryManager);
 
 container.registerSingleton(AuthController);
 container.registerSingleton(LibraryController);
+container.registerSingleton(UserController);
 
 export {container};
