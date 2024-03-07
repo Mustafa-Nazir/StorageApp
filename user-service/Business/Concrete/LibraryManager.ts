@@ -17,6 +17,14 @@ export default class LibraryManager implements ILibraryService{
         this._libraryDal = libraryDal;
     }
     
+    public async AddUser(library: ILibrary): Promise<IResult> {
+        const result = await this.UserControl(library);
+        if(!result.success) return result;
+
+        await this._libraryDal.AddUser(library);
+        return new SuccessResult("Users are added");
+    }
+    
     public async GetDepartmentsAndRolesByLibraryId(id: string): Promise<IDataResult<ILibrary>> {
         const data = await this._libraryDal.Get({_id:id});
         if(data == null) return new ErrorDataResult<ILibrary>(undefined,"The library is not found.");
@@ -85,6 +93,31 @@ export default class LibraryManager implements ILibraryService{
         }
         
         return isExists ? new ErrorResult("New departments are not unique") : new SuccessResult();
+    }
+
+    public async UserControl(library:ILibrary):Promise<IResult>{
+        const result = await this.GetById(library._id);
+        if(!result.success) return new ErrorResult(result.message);
+
+        const uniqueResult = this.uniqueUserControl(result.data as ILibrary,library);
+        if(!uniqueResult.success) return uniqueResult;
+
+        return new SuccessResult();
+    }
+
+    private uniqueUserControl(currentLibrary:ILibrary , newLibrary:ILibrary):IResult{
+        const currentUsers = currentLibrary.users;
+        const newUsers = newLibrary.users; 
+
+        let isExists:boolean = false;
+
+        for (let i = 0; i < newUsers.length; i++) {
+            const newUser = newUsers[i];
+            isExists = currentUsers.some(user => user.userId == newUser.userId);
+            if(isExists) break;
+        }
+
+        return isExists ? new ErrorResult("The user is already in the library") : new SuccessResult();
     }
 
 }

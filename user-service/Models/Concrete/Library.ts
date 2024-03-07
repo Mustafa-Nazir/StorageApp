@@ -13,6 +13,11 @@ const LibrarySchema = new Schema<ILibrary>({
     } ,
     departments:[{
         name:{type:String}
+    }],
+    users:[{
+        userId:{type:Schema.Types.ObjectId , ref:"User"},
+        roleId:{type:Schema.Types.ObjectId , ref:"Library.roles"},
+        departmentId:{type:Schema.Types.ObjectId , ref:"Library.departments"},
     }]
 });
 

@@ -9,4 +9,6 @@ export default interface ILibraryService{
     GetById(id:string):Promise<IDataResult<ILibrary>>;
     GetAllByUserId(id:string):Promise<IDataResult<ILibrary[]>>;
     GetDepartmentsAndRolesByLibraryId(id:string):Promise<IDataResult<ILibrary>>;
+    AddUser(library:ILibrary):Promise<IResult>;
+    UserControl(library:ILibrary):Promise<IResult>
 }

@@ -10,5 +10,10 @@ export default interface ILibrary extends IModel , Document{
     }[],
     departments:{
         name:string
+    }[],
+    users:{
+        userId:Types.ObjectId | string,
+        roleId:Types.ObjectId | string,
+        departmentId:Types.ObjectId | string,
     }[]
 }
