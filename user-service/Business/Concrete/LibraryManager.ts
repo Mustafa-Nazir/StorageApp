@@ -17,6 +17,18 @@ export default class LibraryManager implements ILibraryService{
         this._libraryDal = libraryDal;
     }
     
+    public async GetDepartmentsAndRolesByLibraryId(id: string): Promise<IDataResult<ILibrary>> {
+        const data = await this._libraryDal.Get({_id:id});
+        if(data == null) return new ErrorDataResult<ILibrary>(undefined,"The library is not found.");
+
+        const rolesAndDepartments:ILibrary = {
+            roles:data.roles,
+            departments:data.departments
+        } as ILibrary
+
+        return new SuccessDataResult<ILibrary>(rolesAndDepartments);
+    }
+    
     public async GetAllByUserId(id: string): Promise<IDataResult<ILibrary[]>> {
         const data = await this._libraryDal.GetAll({ownerId:id});
         return new SuccessDataResult<ILibrary[]>(data);

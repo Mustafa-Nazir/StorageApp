@@ -8,4 +8,5 @@ export default interface ILibraryService{
     AddDepartment(library:ILibrary):Promise<IResult>;
     GetById(id:string):Promise<IDataResult<ILibrary>>;
     GetAllByUserId(id:string):Promise<IDataResult<ILibrary[]>>;
+    GetDepartmentsAndRolesByLibraryId(id:string):Promise<IDataResult<ILibrary>>;
 }

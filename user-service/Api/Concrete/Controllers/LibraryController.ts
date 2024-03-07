@@ -54,4 +54,16 @@ export default class LibraryController {
         }
     }
 
+    public async GetDepartmentsAndRolesByLibraryId(req:any , res:any){
+        try {
+            const {id} = req.params;
+            const result = await this._libraryService.GetDepartmentsAndRolesByLibraryId(id);
+
+            const status = result.success ? 200 : 400;
+            return res.status(status).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
+
 }
