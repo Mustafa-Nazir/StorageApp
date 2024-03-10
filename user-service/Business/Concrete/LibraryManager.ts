@@ -53,7 +53,7 @@ export default class LibraryManager implements ILibraryService{
         if(!result.success) return result;
 
         await this._libraryDal.AddDepartment(library);
-        return new SuccessResult();
+        return new SuccessResult("The departments are successfully added");
     }
 
     public async Add(library: ILibrary): Promise<IDataResult<string>> {
@@ -113,7 +113,7 @@ export default class LibraryManager implements ILibraryService{
 
         for (let i = 0; i < newUsers.length; i++) {
             const newUser = newUsers[i];
-            isExists = currentUsers.some(user => user.userId == newUser.userId);
+            isExists = currentUsers.some(user => user.userId.toString() == newUser.userId.toString());
             if(isExists) break;
         }
 

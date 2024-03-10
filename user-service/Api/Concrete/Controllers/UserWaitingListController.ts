@@ -56,6 +56,17 @@ export default class UserWaitingListController{
         }
     }
 
+    public async GetRequestDto(req:any , res:any){
+        try {
+            const email = req.header("user-email");
+
+            const result = await this._userWaitingListService.GetRequestsDtoByEmail(email);
+            return res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
+
     public async RejectRequest(req:any , res:any){
         try {
             const user:IUserWaitingList = req.body;

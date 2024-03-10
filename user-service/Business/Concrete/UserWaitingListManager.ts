@@ -7,6 +7,7 @@ import ErrorResult from "../../Core/Utilities/Results/Concrete/ErrorResult";
 import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
 import IDataResult from "../../Core/Utilities/Results/Abstract/IDataResult";
 import SuccessDataResult from "../../Core/Utilities/Results/Concrete/SuccessDataResult";
+import IUserWaitingListDto from "../../Models/DTOs/IUserWaitingListDto";
 
 @injectable()
 export default class UserWaitingListManager implements IUserWaitingListService{
@@ -14,6 +15,11 @@ export default class UserWaitingListManager implements IUserWaitingListService{
 
     constructor(@inject("IUserWaitingListDal") waitingListDal:IUserWaitingListDal) {
         this._waitingListDal = waitingListDal;
+    }
+    
+    public async GetRequestsDtoByEmail(email: string): Promise<IDataResult<IUserWaitingListDto[]>> {
+        const data = await this._waitingListDal.GetRequestDtoByEmail(email);
+        return new SuccessDataResult(data);
     }
     
     public async GetRequestsByEmail(email: string): Promise<IDataResult<IUserWaitingList[]>> {
