@@ -17,6 +17,16 @@ export default class LibraryManager implements ILibraryService{
         this._libraryDal = libraryDal;
     }
     
+    public async IsUserInLibrary(libraryId:string , userId:string): Promise<IResult> {
+        const library = (await this.GetById(libraryId)).data;
+        if (
+            library?.ownerId.toString() == userId || 
+            library?.users.some(u => u.userId.toString() == userId)
+        ) return new SuccessResult();
+        
+        return new ErrorResult();
+    }
+    
     public async AddUser(library: ILibrary): Promise<IResult> {
         const result = await this.UserControl(library);
         if(!result.success) return result;

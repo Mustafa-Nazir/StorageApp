@@ -11,4 +11,5 @@ export default interface ILibraryService{
     GetDepartmentsAndRolesByLibraryId(id:string):Promise<IDataResult<ILibrary>>;
     AddUser(library:ILibrary):Promise<IResult>;
     UserControl(library:ILibrary):Promise<IResult>
+    IsUserInLibrary(libraryId:string , userId:string):Promise<IResult>;
 }
