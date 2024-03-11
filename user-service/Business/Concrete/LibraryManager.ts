@@ -38,7 +38,7 @@ export default class LibraryManager implements ILibraryService{
     }
     
     public async GetAllByUserId(id: string): Promise<IDataResult<ILibrary[]>> {
-        const data = await this._libraryDal.GetAll({ownerId:id});
+        const data = await this._libraryDal.GetAll({'$or':[{ownerId:id},{"users.userId":id}]});
         return new SuccessDataResult<ILibrary[]>(data);
     }
     
