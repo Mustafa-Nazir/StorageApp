@@ -99,6 +99,9 @@ export default class LibraryManager implements ILibraryService{
         const result = await this.GetById(library._id);
         if(!result.success) return new ErrorResult(result.message);
 
+        const ownerControlResult = this.ownerControl(result.data as ILibrary,library);
+        if(!ownerControlResult.success) return ownerControlResult;
+
         const uniqueResult = this.uniqueUserControl(result.data as ILibrary,library);
         if(!uniqueResult.success) return uniqueResult;
 
@@ -118,6 +121,11 @@ export default class LibraryManager implements ILibraryService{
         }
 
         return isExists ? new ErrorResult("The user is already in the library") : new SuccessResult();
+    }
+
+    private ownerControl(currentLibrary:ILibrary , newLibrary:ILibrary):IResult{
+        const status = newLibrary.users.some(u => u.userId.toString() == currentLibrary.ownerId.toString());
+        return status ? new ErrorResult("The owner is already in the library") : new SuccessResult();
     }
 
 }
