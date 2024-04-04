@@ -11,5 +11,6 @@ router.patch("/addDepartments",(req:any , res:any) => {libraryController.AddDepa
 router.get("/getAll",(req:any , res:any) => {libraryController.GetAllByUserId(req,res);});
 router.get("/getDepartmentsAndRoles/:id",(req:any , res:any) => {libraryController.GetDepartmentsAndRolesByLibraryId(req,res);});
 router.get("/userControlByLibraryId/:id",(req:any , res:any) => {libraryController.UserControlByLibraryId(req,res);});
+router.get("/getUserDepartmentAndRole/:id",(req:any , res:any) => {libraryController.GetUserDepartmentAndRole(req,res);});
 
 export default router;

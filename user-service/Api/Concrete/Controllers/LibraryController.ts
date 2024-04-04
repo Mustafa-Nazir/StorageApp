@@ -80,4 +80,19 @@ export default class LibraryController {
             return res.status(500).send(new ErrorDataResult<any>(error));
         }
     }
+
+    public async GetUserDepartmentAndRole(req:any , res:any){
+        try {
+            const {id} = req.params;
+            const email = req.header("user-email");
+            const userId = (await this._userService.GetByEmail(email)).data?._id;
+
+            const result = await this._libraryService.GetUserDepartmentAndRole(id,userId);
+            
+            const status = result.success ? 200 : 400;
+            return res.status(status).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
 }

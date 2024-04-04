@@ -6,9 +6,11 @@ export default interface ILibrary extends IModel , Document{
     ownerId: Types.ObjectId | string,
     sizeGb:number,
     roles:{
+        _id?:Types.ObjectId | string,
         name:string
     }[],
     departments:{
+        _id?:Types.ObjectId | string,
         name:string
     }[],
     users:{

@@ -8,6 +8,7 @@ import SuccessDataResult from "../../Core/Utilities/Results/Concrete/SuccessData
 import IResult from "../../Core/Utilities/Results/Abstract/IResult";
 import ErrorResult from "../../Core/Utilities/Results/Concrete/ErrorResult";
 import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
+import IUserLibraryDto from "../../Models/DTOs/IUserLibraryDto";
 
 @injectable()
 export default class LibraryManager implements ILibraryService{
@@ -15,6 +16,35 @@ export default class LibraryManager implements ILibraryService{
 
     constructor(@inject("ILibraryDal")libraryDal:ILibraryDal) {
         this._libraryDal = libraryDal;
+    }
+    
+    public async GetUserDepartmentAndRole(libraryId:string,userId:string): Promise<IDataResult<IUserLibraryDto>> {
+        const result = await this.GetById(libraryId);
+        if(!result.success) return new ErrorDataResult<IUserLibraryDto>(undefined,result.message);
+
+        const library = result.data;
+        if (
+            library?.ownerId.toString() == userId
+        ){
+            const owner = library?.roles.find(r => r.name == "owner");
+            const data:IUserLibraryDto = {
+                role:owner as any,
+                departments:library.departments as any
+            }
+
+            return new SuccessDataResult<IUserLibraryDto>(data);
+        }
+
+        const userInfo = library?.users.find(u => u.userId.toString() == userId );
+        const role = library?.roles.find(r => r._id?.toString() == userInfo?.roleId);
+        const department = library?.departments.find(d => d._id?.toString() == userInfo?.departmentId);
+
+        const data:IUserLibraryDto = {
+            role:role as any,
+            departments:[department as any],
+        }
+
+        return new SuccessDataResult<IUserLibraryDto>(data);
     }
     
     public async IsUserInLibrary(libraryId:string , userId:string): Promise<IResult> {

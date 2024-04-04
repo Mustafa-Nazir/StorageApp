@@ -1,6 +1,7 @@
 import IDataResult from "../../Core/Utilities/Results/Abstract/IDataResult";
 import IResult from "../../Core/Utilities/Results/Abstract/IResult";
 import ILibrary from "../../Models/Abstract/ILibrary";
+import IUserLibraryDto from "../../Models/DTOs/IUserLibraryDto";
 
 export default interface ILibraryService{
     Add(library:ILibrary):Promise<IDataResult<string>>;
@@ -12,4 +13,5 @@ export default interface ILibraryService{
     AddUser(library:ILibrary):Promise<IResult>;
     UserControl(library:ILibrary):Promise<IResult>
     IsUserInLibrary(libraryId:string , userId:string):Promise<IResult>;
+    GetUserDepartmentAndRole(libraryId:string,userId:string):Promise<IDataResult<IUserLibraryDto>>;
 }
