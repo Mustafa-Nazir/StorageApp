@@ -22,6 +22,18 @@ export default class AnnouncementController{
         }
     }
 
+    public async DeleteById(req:any , res:any){
+        try {
+            const {id} = req.params;
+            const announcement:IAnnouncement = {_id:id} as IAnnouncement
+
+            const result = await this._announcementService.Delete(announcement);
+            res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
+
     public async GetAllByCategoryId(req:any , res:any){
         try {
             const {categoryId} = req.params;

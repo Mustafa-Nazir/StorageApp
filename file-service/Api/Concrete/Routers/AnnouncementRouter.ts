@@ -7,6 +7,7 @@ const router = express.Router();
 const announcementController = container.resolve(AnnouncementController);
 
 router.post("/add",(req:any , res:any) => {announcementController.Add(req,res);});
+router.delete("/delete/:id",(req:any , res:any) => {announcementController.DeleteById(req,res);});
 router.get("/getAllByCategoryId/:categoryId" , (req:any , res:any) => {announcementController.GetAllByCategoryId(req,res);});
 
 export default router;
