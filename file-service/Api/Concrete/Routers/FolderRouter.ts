@@ -7,5 +7,6 @@ const router = express.Router();
 const folderController = container.resolve(FolderController);
 
 router.post("/add",(req:any,res:any)=>{folderController.Add(req,res);});
+router.get("/getAllByCurrentFolderId/:id",(req:any,res:any)=>{folderController.GetAllByCurrentFolderId(req,res);})
 
 export default router;

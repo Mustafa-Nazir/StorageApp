@@ -20,4 +20,15 @@ export default class FolderController{
             return res.status(500).send(new ErrorDataResult<any>(error));
         }
     }
+
+    public async GetAllByCurrentFolderId(req:any,res:any){
+        try {
+            const {id} = req.params;
+
+            const result = await this._folderService.GetAllByCurrentFolderId(id);
+            res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
 }
