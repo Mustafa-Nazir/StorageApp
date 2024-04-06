@@ -7,12 +7,20 @@ import SuccessDataResult from "../../Core/Utilities/Results/Concrete/SuccessData
 import IResult from "../../Core/Utilities/Results/Abstract/IResult";
 import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
 import ErrorResult from "../../Core/Utilities/Results/Concrete/ErrorResult";
+import ErrorDataResult from "../../Core/Utilities/Results/Concrete/ErrorDataResult";
 
 @injectable()
 export default class FolderManager implements IFolderService{
     private _folderDal:IFolderDal;
     constructor(@inject("IFolderDal")folderDal:IFolderDal){
         this._folderDal = folderDal
+    }
+    
+    public async GetFolderNameById(id: string): Promise<IDataResult<string>> {
+        const data = await this._folderDal.Get({_id:id});
+        if(data == null) return new ErrorDataResult<string>(undefined);
+        const folderName = data.name;
+        return new SuccessDataResult<string>(folderName);
     }
     public async Add(folder: IFolder): Promise<IDataResult<string>> {
         const result = await this.folderNameControl(folder);
