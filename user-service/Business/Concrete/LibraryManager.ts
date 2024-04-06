@@ -9,6 +9,8 @@ import IResult from "../../Core/Utilities/Results/Abstract/IResult";
 import ErrorResult from "../../Core/Utilities/Results/Concrete/ErrorResult";
 import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
 import IUserLibraryDto from "../../Models/DTOs/IUserLibraryDto";
+import ILibraryUsersDto from "../../Models/DTOs/ILibraryUsersDto";
+import ILibraryInfoDto from "../../Models/DTOs/ILibraryInfoDto";
 
 @injectable()
 export default class LibraryManager implements ILibraryService{
@@ -16,6 +18,16 @@ export default class LibraryManager implements ILibraryService{
 
     constructor(@inject("ILibraryDal")libraryDal:ILibraryDal) {
         this._libraryDal = libraryDal;
+    }
+    
+    public async GetLibraryInfoById(id: string): Promise<IDataResult<ILibraryInfoDto>> {
+        const data = await this._libraryDal.GetLibraryInfoById(id);
+        return new SuccessDataResult<ILibraryInfoDto>(data);
+    }
+    
+    public async GetLibraryUsersById(id: string): Promise<IDataResult<ILibraryUsersDto>> {
+        const data = await this._libraryDal.GetLibraryUsersById(id);
+        return new SuccessDataResult<ILibraryUsersDto>(data);
     }
     
     public async GetUserDepartmentAndRole(libraryId:string,userId:string): Promise<IDataResult<IUserLibraryDto>> {

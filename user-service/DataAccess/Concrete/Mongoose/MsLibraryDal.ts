@@ -3,11 +3,25 @@ import { MsModelRepositoryBase } from "../../../Core/DataAccess/Concrete/Mongoos
 import ILibrary from "../../../Models/Abstract/ILibrary";
 import { Library } from "../../../Models/Concrete/Library";
 import ILibraryDal from "../../Abstract/ILibraryDal";
+import ILibraryUsersDto from "../../../Models/DTOs/ILibraryUsersDto";
+import ILibraryInfoDto from "../../../Models/DTOs/ILibraryInfoDto";
 
 @injectable()
 export default class MsLibraryDal extends MsModelRepositoryBase<ILibrary> implements ILibraryDal{
     constructor(){
         super(Library);
+    }
+    
+    public async GetLibraryInfoById(id: string): Promise<ILibraryInfoDto> {
+        const data = await Library.findOne({_id:id})
+        .populate("ownerId","_id name surname email").select("_id name ownerId sizeGb") as any;
+        return data;
+    }
+    
+    public async GetLibraryUsersById(id:string): Promise<ILibraryUsersDto> {
+        const data = await Library.findOne({_id:id})
+        .populate("users.userId","_id name surname email").select("users") as any;
+        return data;
     }
     
     public async AddUser(library: ILibrary): Promise<void> {

@@ -1,6 +1,8 @@
 import IDataResult from "../../Core/Utilities/Results/Abstract/IDataResult";
 import IResult from "../../Core/Utilities/Results/Abstract/IResult";
 import ILibrary from "../../Models/Abstract/ILibrary";
+import ILibraryInfoDto from "../../Models/DTOs/ILibraryInfoDto";
+import ILibraryUsersDto from "../../Models/DTOs/ILibraryUsersDto";
 import IUserLibraryDto from "../../Models/DTOs/IUserLibraryDto";
 
 export default interface ILibraryService{
@@ -14,4 +16,6 @@ export default interface ILibraryService{
     UserControl(library:ILibrary):Promise<IResult>
     IsUserInLibrary(libraryId:string , userId:string):Promise<IResult>;
     GetUserDepartmentAndRole(libraryId:string,userId:string):Promise<IDataResult<IUserLibraryDto>>;
+    GetLibraryUsersById(id:string):Promise<IDataResult<ILibraryUsersDto>>;
+    GetLibraryInfoById(id:string):Promise<IDataResult<ILibraryInfoDto>>;
 }

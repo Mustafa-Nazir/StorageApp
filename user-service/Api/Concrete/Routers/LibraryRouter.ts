@@ -12,5 +12,7 @@ router.get("/getAll",(req:any , res:any) => {libraryController.GetAllByUserId(re
 router.get("/getDepartmentsAndRoles/:id",(req:any , res:any) => {libraryController.GetDepartmentsAndRolesByLibraryId(req,res);});
 router.get("/userControlByLibraryId/:id",(req:any , res:any) => {libraryController.UserControlByLibraryId(req,res);});
 router.get("/getUserDepartmentAndRole/:id",(req:any , res:any) => {libraryController.GetUserDepartmentAndRole(req,res);});
+router.get("/getLibraryUsersById/:id",(req:any , res:any) => {libraryController.GetLibraryUsersById(req,res);});
+router.get("/getLibraryInfoById/:id",(req:any , res:any) => {libraryController.GetLibraryInfoById(req,res);});
 
 export default router;
