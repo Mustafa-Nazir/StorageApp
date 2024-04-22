@@ -18,8 +18,7 @@ export default class FileController {
                 return res.status(400).send(new ErrorResult("No file uploaded"));
             }
 
-            const file: IFile = req.body;
-
+            const file: IFile = JSON.parse(req.body.data);
             const filePath = `${file.libraryId.toString()}/${file.name}`;
             const blob = FsStorageBucket.file(filePath);
             const blobStream = blob.createWriteStream({
@@ -63,6 +62,17 @@ export default class FileController {
 
             const result = await this._fileService.Delete(file);
             return res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
+
+    public async GetAllByFolderIdDto(req:any , res:any){
+        try {
+            const {id} = req.params;
+
+            const result = await this._fileService.GetAllByFolderIdDto(id);
+            res.status(200).send(result);
         } catch (error) {
             return res.status(500).send(new ErrorDataResult<any>(error));
         }

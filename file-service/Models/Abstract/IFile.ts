@@ -7,6 +7,7 @@ export default interface IFile extends IModel,Document{
     url:string,
     folderId:string | Types.ObjectId,
     libraryId:string | Types.ObjectId,
+    departmentId:string | Types.ObjectId,
     date:Date,
-    password:string | null
+    password:string
 }

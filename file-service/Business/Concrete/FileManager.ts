@@ -7,6 +7,7 @@ import IFileDal from "../../DataAccess/Abstract/IFileDal";
 import HashingHelper from "../../Core/Utilities/Security/Hashing/HashingHelper";
 import SuccessDataResult from "../../Core/Utilities/Results/Concrete/SuccessDataResult";
 import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
+import IFileDto from "../../Models/DTOs/IFileDto";
 
 @injectable()
 export default class FileManager implements IFileService{
@@ -15,14 +16,21 @@ export default class FileManager implements IFileService{
     constructor(@inject("IFileDal")fileDal:IFileDal){
         this._fileDal = fileDal;
     }
+    
+    public async GetAllByFolderIdDto(id: string): Promise<IDataResult<IFileDto[]>> {
+        const data = await this._fileDal.GetAllByFolderIdDto(id);
+        return new SuccessDataResult(data);
+    }
 
-    public async Add(file: IFile): Promise<IDataResult<string>> {
-        if(file.password != null){
+    public async Add(file: IFile): Promise<IDataResult<IFileDto>> {
+        if(file.password.length > 0){
             const password = await this.createPassword(file.password);
             file.password = password;
         }
         const data = await this._fileDal.Add(file)
-        return new SuccessDataResult<string>(data);
+        file._id = data;
+        const fileDto:IFileDto = this.getFileDto(file);
+        return new SuccessDataResult<IFileDto>(fileDto,"The file was successfully uploaded");
     }
 
     public async Delete(file: IFile): Promise<IResult> {
@@ -33,6 +41,20 @@ export default class FileManager implements IFileService{
     private async createPassword(password:string):Promise<string>{
         const hashedPassword = HashingHelper.CreatePasswordHash(password);
         return hashedPassword;
+    }
+
+    private getFileDto(file:IFile):IFileDto{
+        return {
+            _id:file._id,
+            departmentId:file.departmentId.toString(),
+            date:file.date || new Date(),
+            email:file.email,
+            folderId:file.folderId.toString(),
+            libraryId:file.libraryId.toString(),
+            name:file.name,
+            encrypted: file.password == "" ? false : true, 
+            url: file.password == "" ? file.url : "" 
+        }
     }
 
 }
