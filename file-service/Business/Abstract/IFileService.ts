@@ -8,4 +8,5 @@ export default interface IFileService{
     Delete(file:IFile):Promise<IResult>;
     GetAllByFolderIdDto(id:string):Promise<IDataResult<IFileDto[]>>;
     GetByLibraryIdFolderIdAndName(libraryId:string,folderId:string,name:string):Promise<IDataResult<IFile>>;
+    GetById(id:string):Promise<IDataResult<IFile>>;
 }

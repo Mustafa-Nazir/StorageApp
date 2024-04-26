@@ -18,6 +18,12 @@ export default class FileManager implements IFileService{
         this._fileDal = fileDal;
     }
     
+    public async GetById(id: string): Promise<IDataResult<IFile>> {
+        const data = await this._fileDal.Get({_id:id});
+        if(data == null) return new ErrorDataResult<IFile>(undefined,"The file is not found");
+        return new SuccessDataResult<IFile>(data);
+    }
+    
     public async GetByLibraryIdFolderIdAndName(libraryId: string, folderId: string, name: string): Promise<IDataResult<IFile>> {
         const data = await this._fileDal.Get({libraryId:libraryId , folderId:folderId , name:name});
         if(data == null) return new ErrorDataResult<IFile>(undefined);

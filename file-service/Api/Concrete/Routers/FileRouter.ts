@@ -8,7 +8,8 @@ const router = express.Router();
 const fileController = container.resolve(FileController);
 
 router.post("/add",MulterUploadSingle,(req,res)=>{fileController.Add(req,res);});
-router.delete("/delete/:id",(req,res)=>{fileController.Delete(req,res);});
+router.post("/deleteUnencrypted",(req,res)=>{fileController.DeleteUnencrypted(req,res);});
+router.post("/deleteEncrypted",(req,res)=>{fileController.DeleteEncrypted(req,res);});
 router.get("/getAllByFolderIdDto/:id",(req,res)=>{fileController.GetAllByFolderIdDto(req,res);})
 
 export default router;
