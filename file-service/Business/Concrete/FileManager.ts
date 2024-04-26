@@ -8,6 +8,7 @@ import HashingHelper from "../../Core/Utilities/Security/Hashing/HashingHelper";
 import SuccessDataResult from "../../Core/Utilities/Results/Concrete/SuccessDataResult";
 import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
 import IFileDto from "../../Models/DTOs/IFileDto";
+import ErrorDataResult from "../../Core/Utilities/Results/Concrete/ErrorDataResult";
 
 @injectable()
 export default class FileManager implements IFileService{
@@ -15,6 +16,12 @@ export default class FileManager implements IFileService{
 
     constructor(@inject("IFileDal")fileDal:IFileDal){
         this._fileDal = fileDal;
+    }
+    
+    public async GetByLibraryIdFolderIdAndName(libraryId: string, folderId: string, name: string): Promise<IDataResult<IFile>> {
+        const data = await this._fileDal.Get({libraryId:libraryId , folderId:folderId , name:name});
+        if(data == null) return new ErrorDataResult<IFile>(undefined);
+        return new SuccessDataResult<IFile>(data);
     }
     
     public async GetAllByFolderIdDto(id: string): Promise<IDataResult<IFileDto[]>> {

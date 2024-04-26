@@ -12,6 +12,10 @@ export default class FileController {
         this._fileService = fileService
     }
 
+    private getFilePath = (libraryId:string,folderId:string,fileName:string) => {
+        return `${libraryId}/${folderId}/${fileName}`
+    }
+
     public async Add(req: any, res: any) {
         try {
             if (!req.file) {
@@ -19,7 +23,10 @@ export default class FileController {
             }
 
             const file: IFile = JSON.parse(req.body.data);
-            const filePath = `${file.libraryId.toString()}/${file.name}`;
+            const resultForFile = await this._fileService.GetByLibraryIdFolderIdAndName(file.libraryId.toString() , file.folderId.toString() , file.name);
+            if(resultForFile.success) return res.status(400).send(new ErrorDataResult<any>(undefined,"There is a file with the same name"));
+
+            const filePath = this.getFilePath(file.libraryId.toString(),file.folderId.toString(),file.name);
             const blob = FsStorageBucket.file(filePath);
             const blobStream = blob.createWriteStream({
                 metadata: {
