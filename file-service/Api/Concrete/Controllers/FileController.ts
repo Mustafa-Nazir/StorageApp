@@ -6,6 +6,8 @@ import { FsStorageBucket } from "../../../DataAccess/Concrete/Firestore/FsStorag
 import ErrorResult from "../../../Core/Utilities/Results/Concrete/ErrorResult";
 import HashingHelper from "../../../Core/Utilities/Security/Hashing/HashingHelper";
 import IResult from "../../../Core/Utilities/Results/Abstract/IResult";
+import IDataResult from "../../../Core/Utilities/Results/Abstract/IDataResult";
+import SuccessDataResult from "../../../Core/Utilities/Results/Concrete/SuccessDataResult";
 
 @injectable()
 export default class FileController {
@@ -74,10 +76,20 @@ export default class FileController {
         return result;
     }
 
+    private passwordControl = async (file: IFile): Promise<IDataResult<IFile>> => {
+        const resultForFile = await this._fileService.GetById(file._id);
+        if (!resultForFile.success) return resultForFile;
+
+        const passwordStatus = await HashingHelper.VerifyPasswordHash(file.password, resultForFile.data?.password as string);
+        if (!passwordStatus) return new ErrorDataResult<IFile>(undefined,"The password is wrong");
+
+        return new SuccessDataResult<IFile>(resultForFile.data);
+    }
+
     public async DeleteUnencrypted(req: any, res: any) {
         try {
             const file: IFile = req.body;
-            
+
             const result = await this.deleteFile(file);
             return res.status(200).send(result);
         } catch (error) {
@@ -88,11 +100,8 @@ export default class FileController {
     public async DeleteEncrypted(req: any, res: any) {
         try {
             const file: IFile = req.body;
-            const resultForFile = await this._fileService.GetById(file._id);
-            if (!resultForFile.success) return res.status(400).send(resultForFile);
-
-            const passwordStatus = await HashingHelper.VerifyPasswordHash(file.password, resultForFile.data?.password as string);
-            if (!passwordStatus) return res.status(400).send(new ErrorResult("The password is wrong"));
+            const resultForPassword = await this.passwordControl(file);
+            if(!resultForPassword.success) return res.status(400).send(resultForPassword);
 
             const result = await this.deleteFile(file);
             return res.status(200).send(result);
@@ -110,5 +119,14 @@ export default class FileController {
         } catch (error) {
             return res.status(500).send(new ErrorDataResult<any>(error));
         }
+    }
+
+    public async DownloadEncryptedFile(req: any, res: any) {
+        const file: IFile = req.body;
+        const resultForPassword = await this.passwordControl(file);
+        if(!resultForPassword.success) return res.status(400).send(resultForPassword);
+
+        const url = resultForPassword.data?.url;
+        return res.status(200).send(new SuccessDataResult<string>(url));
     }
 }
