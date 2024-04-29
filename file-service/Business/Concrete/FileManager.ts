@@ -79,7 +79,8 @@ export default class FileManager implements IFileService{
             libraryId:file.libraryId.toString(),
             name:file.name,
             encrypted: file.password == "" ? false : true, 
-            url: file.password == "" ? file.url : "" 
+            url: file.password == "" ? file.url : "",
+            size:file.size 
         }
     }
 

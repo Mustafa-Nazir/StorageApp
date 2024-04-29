@@ -9,5 +9,6 @@ export default interface IFileDto extends IDto{
     libraryId:string,
     departmentId:string,
     date:Date,
-    encrypted:boolean
+    encrypted:boolean,
+    size:number
 } 
