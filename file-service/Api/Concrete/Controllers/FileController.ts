@@ -27,6 +27,12 @@ export default class FileController {
             }
 
             const file: IFile = JSON.parse(req.body.data);
+
+            const fileSize: number = req.file.size;
+            const resultForSize = await this._fileService.LibraryEmptySizeControl(file.libraryId.toString(), fileSize);
+            if (!resultForSize.success) return res.status(400).send(resultForSize);
+            file.size = fileSize;
+            
             const resultForFile = await this._fileService.GetByLibraryIdFolderIdAndName(file.libraryId.toString(), file.folderId.toString(), file.name);
             if (resultForFile.success) return res.status(400).send(new ErrorDataResult<any>(undefined, "There is a file with the same name"));
 
@@ -81,7 +87,7 @@ export default class FileController {
         if (!resultForFile.success) return resultForFile;
 
         const passwordStatus = await HashingHelper.VerifyPasswordHash(file.password, resultForFile.data?.password as string);
-        if (!passwordStatus) return new ErrorDataResult<IFile>(undefined,"The password is wrong");
+        if (!passwordStatus) return new ErrorDataResult<IFile>(undefined, "The password is wrong");
 
         return new SuccessDataResult<IFile>(resultForFile.data);
     }
@@ -101,7 +107,7 @@ export default class FileController {
         try {
             const file: IFile = req.body;
             const resultForPassword = await this.passwordControl(file);
-            if(!resultForPassword.success) return res.status(400).send(resultForPassword);
+            if (!resultForPassword.success) return res.status(400).send(resultForPassword);
 
             const result = await this.deleteFile(file);
             return res.status(200).send(result);
@@ -122,11 +128,26 @@ export default class FileController {
     }
 
     public async DownloadEncryptedFile(req: any, res: any) {
-        const file: IFile = req.body;
-        const resultForPassword = await this.passwordControl(file);
-        if(!resultForPassword.success) return res.status(400).send(resultForPassword);
+        try {
+            const file: IFile = req.body;
+            const resultForPassword = await this.passwordControl(file);
+            if (!resultForPassword.success) return res.status(400).send(resultForPassword);
 
-        const url = resultForPassword.data?.url;
-        return res.status(200).send(new SuccessDataResult<string>(url));
+            const url = resultForPassword.data?.url;
+            return res.status(200).send(new SuccessDataResult<string>(url));
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
+
+    public async GetTotalSizeByLibraryId(req: any, res: any) {
+        try {
+            const {id} = req.params;
+
+            const result = await this._fileService.GetTotalSizeByLibraryId(id);
+            return res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
     }
 }

@@ -9,5 +9,6 @@ export default interface IFile extends IModel,Document{
     libraryId:string | Types.ObjectId,
     departmentId:string | Types.ObjectId,
     date:Date,
-    password:string
+    password:string,
+    size:number
 }

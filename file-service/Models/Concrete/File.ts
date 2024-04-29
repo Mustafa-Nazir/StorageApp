@@ -9,7 +9,8 @@ const FileSchema = new Schema<IFile>({
     libraryId:{type:Schema.Types.ObjectId},
     departmentId:{type:Schema.Types.ObjectId},
     date:{type:Date , default:Date.now},
-    password:{type:String}
+    password:{type:String},
+    size:{type:Number , default:0}
 })
 
 export const File = model<IFile>("IFile",FileSchema);

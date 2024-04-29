@@ -9,6 +9,7 @@ import SuccessDataResult from "../../Core/Utilities/Results/Concrete/SuccessData
 import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
 import IFileDto from "../../Models/DTOs/IFileDto";
 import ErrorDataResult from "../../Core/Utilities/Results/Concrete/ErrorDataResult";
+import ErrorResult from "../../Core/Utilities/Results/Concrete/ErrorResult";
 
 @injectable()
 export default class FileManager implements IFileService{
@@ -16,6 +17,18 @@ export default class FileManager implements IFileService{
 
     constructor(@inject("IFileDal")fileDal:IFileDal){
         this._fileDal = fileDal;
+    }
+    
+    public async LibraryEmptySizeControl(libraryId: string, size: number): Promise<IResult> {
+        const librarySize = 250 * 1024 * 1024;
+        const totalSize = await this._fileDal.GetTotalSizeByLibraryId(libraryId);
+
+        return (totalSize + size) <= librarySize ? new SuccessResult() : new ErrorResult("There is not enough space in the library")
+    }
+    
+    public async GetTotalSizeByLibraryId(id: string): Promise<IDataResult<number>> {
+        const size = await this._fileDal.GetTotalSizeByLibraryId(id);
+        return new SuccessDataResult<number>(size);
     }
     
     public async GetById(id: string): Promise<IDataResult<IFile>> {

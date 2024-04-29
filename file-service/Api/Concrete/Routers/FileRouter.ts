@@ -11,6 +11,7 @@ router.post("/add",MulterUploadSingle,(req,res)=>{fileController.Add(req,res);})
 router.post("/deleteUnencrypted",(req,res)=>{fileController.DeleteUnencrypted(req,res);});
 router.post("/deleteEncrypted",(req,res)=>{fileController.DeleteEncrypted(req,res);});
 router.post("/downloadEncryptedFile",(req,res)=>{fileController.DownloadEncryptedFile(req,res);});
-router.get("/getAllByFolderIdDto/:id",(req,res)=>{fileController.GetAllByFolderIdDto(req,res);})
+router.get("/getAllByFolderIdDto/:id",(req,res)=>{fileController.GetAllByFolderIdDto(req,res);});
+router.get("/getTotalSizeByLibraryId/:id",(req,res)=>{fileController.GetTotalSizeByLibraryId(req,res);});
 
 export default router;

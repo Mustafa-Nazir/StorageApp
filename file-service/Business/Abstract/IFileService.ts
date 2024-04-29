@@ -9,4 +9,6 @@ export default interface IFileService{
     GetAllByFolderIdDto(id:string):Promise<IDataResult<IFileDto[]>>;
     GetByLibraryIdFolderIdAndName(libraryId:string,folderId:string,name:string):Promise<IDataResult<IFile>>;
     GetById(id:string):Promise<IDataResult<IFile>>;
+    GetTotalSizeByLibraryId(id:string):Promise<IDataResult<number>>;
+    LibraryEmptySizeControl(libraryId:string,size:number):Promise<IResult>;
 }

@@ -12,6 +12,15 @@ export default class MsFileDal extends MsModelRepositoryBase<IFile> implements I
         super(File)
     }
     
+    public async GetTotalSizeByLibraryId(id: string): Promise<number> {
+        const data = await File.aggregate([
+            {$match: { libraryId: new Types.ObjectId(id) }},
+            {$group: { _id: null, totalSize: { $sum: '$size' } }}
+        ]); 
+
+        return data.length <= 0 ? 0 : data[0].totalSize;
+    }
+    
     public async GetAllByFolderIdDto(id: string): Promise<IFileDto[]> {
         const data = File.aggregate([
             {
