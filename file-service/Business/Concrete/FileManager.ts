@@ -10,6 +10,9 @@ import SuccessResult from "../../Core/Utilities/Results/Concrete/SuccessResult";
 import IFileDto from "../../Models/DTOs/IFileDto";
 import ErrorDataResult from "../../Core/Utilities/Results/Concrete/ErrorDataResult";
 import ErrorResult from "../../Core/Utilities/Results/Concrete/ErrorResult";
+import IFileEmailDto from "../../Models/DTOs/IFileEmailDto";
+import IFileDepartmentDto from "../../Models/DTOs/IFileDepartmentDto";
+import IFileDateDto from "../../Models/DTOs/IFileDateDto";
 
 @injectable()
 export default class FileManager implements IFileService{
@@ -17,6 +20,21 @@ export default class FileManager implements IFileService{
 
     constructor(@inject("IFileDal")fileDal:IFileDal){
         this._fileDal = fileDal;
+    }
+    
+    public async GetAmountAccordingToDate(libraryId: string): Promise<IDataResult<IFileDateDto[]>> {
+        const data = await this._fileDal.GetAmountAccordingToDate(libraryId);
+        return new SuccessDataResult<IFileDateDto[]>(data);
+    }
+    
+    public async GetTotalSizeAccordingToDepartment(libraryId: string): Promise<IDataResult<IFileDepartmentDto[]>> {
+        const data = await this._fileDal.GetTotalSizeAccordingToDepartment(libraryId);
+        return new SuccessDataResult<IFileDepartmentDto[]>(data);
+    }
+    
+    public async GetTotalSizeAccordingToEmail(libraryId: string): Promise<IDataResult<IFileEmailDto[]>> {
+        const data = await this._fileDal.GetTotalSizeAccordingToEmail(libraryId);
+        return new SuccessDataResult<IFileEmailDto[]>(data);
     }
     
     public async LibraryEmptySizeControl(libraryId: string, size: number): Promise<IResult> {

@@ -150,4 +150,37 @@ export default class FileController {
             return res.status(500).send(new ErrorDataResult<any>(error));
         }
     }
+
+    public async GetTotalSizeAccordingToEmail(req: any, res: any) {
+        try {
+            const {id} = req.params;
+
+            const result = await this._fileService.GetTotalSizeAccordingToEmail(id);
+            return res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
+    
+    public async GetTotalSizeAccordingToDepartment(req: any, res: any) {
+        try {
+            const {id} = req.params;
+
+            const result = await this._fileService.GetTotalSizeAccordingToDepartment(id);
+            return res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
+
+    public async GetAmountAccordingToDate(req: any, res: any) {
+        try {
+            const {id} = req.params;
+
+            const result = await this._fileService.GetAmountAccordingToDate(id);
+            return res.status(200).send(result);
+        } catch (error) {
+            return res.status(500).send(new ErrorDataResult<any>(error));
+        }
+    }
 }

@@ -13,5 +13,8 @@ router.post("/deleteEncrypted",(req,res)=>{fileController.DeleteEncrypted(req,re
 router.post("/downloadEncryptedFile",(req,res)=>{fileController.DownloadEncryptedFile(req,res);});
 router.get("/getAllByFolderIdDto/:id",(req,res)=>{fileController.GetAllByFolderIdDto(req,res);});
 router.get("/getTotalSizeByLibraryId/:id",(req,res)=>{fileController.GetTotalSizeByLibraryId(req,res);});
+router.get("/getTotalSizeAccordingToEmail/:id",(req,res)=>{fileController.GetTotalSizeAccordingToEmail(req,res);});
+router.get("/getTotalSizeAccordingToDepartment/:id",(req,res)=>{fileController.GetTotalSizeAccordingToDepartment(req,res);});
+router.get("/getAmountAccordingToDate/:id",(req,res)=>{fileController.GetAmountAccordingToDate(req,res);});
 
 export default router;
