@@ -17,7 +17,8 @@ export default class MsFileDal extends MsModelRepositoryBase<IFile> implements I
     
     public async GetAmountAccordingToDate(libraryId: string): Promise<IFileDateDto[]> {
         const today = new Date();
-        const thirtyDaysAgo = new Date(today.getDate() - 30);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(today.getDate() - 30);
 
         const data = await File.aggregate([
             {$match: { libraryId: new Types.ObjectId(libraryId) , date:{ $gte: thirtyDaysAgo, $lte: today } }},
