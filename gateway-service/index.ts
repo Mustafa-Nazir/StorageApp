@@ -5,8 +5,10 @@ import bodyParser from "body-parser";
 import userRouter from "./Api/Concrete/Routers/UserServiceRouter";
 import fileRouter from "./Api/Concrete/Routers/FileServiceRouter";
 import { TokenControl } from "./Api/Concrete/Middlewares/AuthMiddleware";
+import { RedisConnect } from "./DataAccess/Concrete/Redis/RedisClient";
 
 dotenv.config();
+RedisConnect();
 
 const app = express();
 

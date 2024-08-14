@@ -1,5 +1,5 @@
 import axios from "axios"
-import fs from "fs"
+import RedisClient from "../../../DataAccess/Concrete/Redis/RedisClient";
 
 export const TokenControl = async (req: any, res: any, next: any) => {
     try {
@@ -10,7 +10,7 @@ export const TokenControl = async (req: any, res: any, next: any) => {
         const authorization = req.header('Authorization');
         const token = getTokenFromHeader(authorization);
 
-        const tokenLog = getTokenLog(token);
+        const tokenLog = await getTokenLog(token);
         const newHeader = "user-email";
         if (tokenLog != null) {
             req.headers[newHeader] = tokenLog.email;
@@ -19,8 +19,8 @@ export const TokenControl = async (req: any, res: any, next: any) => {
 
         const result = await tokenControlRequest(authorization);
         if (!result.success) return res.status(401).send(result);
-
-        addTokenLog({ token: token, ...result.data });
+        
+        await addTokenLog({ token: token, ...result.data });
         req.headers[newHeader] = result.data.email;
         return next();
 
@@ -49,41 +49,21 @@ const pathControl = (path: string): boolean => {
     return allowedPaths.includes(formattedPath);
 }
 
-const filePath = "./tokenLog.json";
 interface ITokenLog { token: string, email: string, exp: number };
 
-const getTokenLog = (token: string) => {
-    try {
-        const file = fs.readFileSync(filePath, "utf8");
-        const data: ITokenLog[] = JSON.parse(file);
+const getTokenLog = async (token: string) => {
+    const exist = await RedisClient.exists(token);
+    if(!exist) return null;
 
-        const tokenObj = data?.find(obj => obj?.token == token) || null;
-        if (tokenObj == null) return tokenObj;
-        else if (!expControl(tokenObj.exp)) return tokenObj;
-
-        const newData = data.filter(obj => obj.token != token);
-        addTokenLogList(newData);
-        return null
-    } catch (error) {
-    }
+    const tokenObj = await RedisClient.hGetAll(token)
+    return {...tokenObj};
 }
 
-const addTokenLog = (tokenLog: ITokenLog) => {
-    const file = fs.readFileSync(filePath, "utf8");
-    const data: ITokenLog[] = JSON.parse(file);
+const addTokenLog = async (tokenLog: ITokenLog) => {
+    const exp = Math.trunc(tokenLog.exp - (Date.now() / 1000));
 
-    data.push(tokenLog);
-    addTokenLogList(data);
-}
-
-const addTokenLogList = (data: ITokenLog[]) => {
-    const dataToJson = JSON.stringify(data);
-    fs.writeFileSync(filePath, dataToJson, "utf8");
-}
-
-const expControl = (exp: number): boolean => {
-    const second = Date.now() / 1000;
-    return exp < second;
+    await RedisClient.hSet(tokenLog.token,"email",tokenLog.email);
+    await RedisClient.expire(tokenLog.token,exp);
 }
 
 const getTokenFromHeader = (header: string) => {
