@@ -14,6 +14,8 @@ import ErrorDataResult from "../../Core/Utilities/Results/Concrete/ErrorDataResu
 import JwtHelper from "../../Core/Utilities/Security/JWT/JwtHelper";
 import SuccessDataResult from "../../Core/Utilities/Results/Concrete/SuccessDataResult";
 import IUserCredentials from "../../Core/Models/Abstract/IUserCredentials";
+import IUserCredentialsDto from "../../Models/DTOs/IUserCredentialsDto";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 @injectable()
 export default class AuthManager implements IAuthService {
@@ -21,6 +23,28 @@ export default class AuthManager implements IAuthService {
 
     constructor(@inject("IUserService") userService: IUserService) {
         this._userService = userService;
+    }
+
+    public TokenControl(token: string): IDataResult<IUserCredentialsDto> {
+        try {
+            const decodedToken: JwtPayload = jwt.decode(token) as JwtPayload;
+
+            if (token && decodedToken) {
+                const exp = decodedToken.exp !== undefined ? decodedToken.exp : 0;
+                const second = Date.now() / 1000;
+
+                if (exp < second) return new ErrorDataResult<IUserCredentialsDto>(undefined, "JWt expired");
+
+                const secretToken: string = process.env.SECRET_TOKEN || "";
+                const decodedData: JwtPayload = jwt.verify(token, secretToken) as JwtPayload;
+                if (decodedData.email) return new SuccessDataResult<IUserCredentialsDto>({ email: decodedData.email, exp: exp });
+            }
+
+            return new ErrorDataResult<IUserCredentialsDto>(undefined, "Unauthorized");
+        } catch (error) {
+            return new ErrorDataResult<IUserCredentialsDto>(undefined, "Unauthorized");
+        }
+
     }
 
     public async Register(userForRegisterDto: IUserForRegisterDto): Promise<IResult> {
@@ -43,16 +67,16 @@ export default class AuthManager implements IAuthService {
         const errorMessage = "Email or password are incorrect";
         if (!result.success) return new ErrorDataResult<IAccessToken>(undefined, errorMessage);
 
-        const passwordControl:boolean = await HashingHelper.VerifyPasswordHash(userForLoginDto.password , result.data?.password as string)
-        if(!passwordControl) return new ErrorDataResult<IAccessToken>(undefined, errorMessage);
+        const passwordControl: boolean = await HashingHelper.VerifyPasswordHash(userForLoginDto.password, result.data?.password as string)
+        if (!passwordControl) return new ErrorDataResult<IAccessToken>(undefined, errorMessage);
 
         const token = this.createAccessToken(result.data as IUser)
         return new SuccessDataResult<IAccessToken>(token);
     }
 
-    private createAccessToken(user:IUser):IAccessToken{
-        const userCredentials:IUserCredentials = {
-            email:user.email
+    private createAccessToken(user: IUser): IAccessToken {
+        const userCredentials: IUserCredentials = {
+            email: user.email
         }
         const token = JwtHelper.CreateToken(userCredentials);
 

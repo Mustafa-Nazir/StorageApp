@@ -8,8 +8,13 @@ import libraryRouter from "./Api/Concrete/Routers/LibraryRouter";
 import userRouter from "./Api/Concrete/Routers/UserRouter";
 import userWaitingListRouter from "./Api/Concrete/Routers/UserWaitingListRouter";
 import MsStorageAppDb from "./DataAccess/Concrete/Mongoose/MsStorageAppDb";
+import IRPCServer from "./Api/RPC/IRPCServer";
+import {container} from "./Api/DependencyResolvers/TSyrnge/IoCContainer"
 
 dotenv.config();
+
+const rpcServer:IRPCServer = container.resolve<IRPCServer>("IRPCServer");
+rpcServer.Start();
 
 const app = express();
 

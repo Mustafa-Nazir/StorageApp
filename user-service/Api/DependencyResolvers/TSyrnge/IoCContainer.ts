@@ -17,6 +17,8 @@ import MsUserWaitingListDal from "../../../DataAccess/Concrete/Mongoose/MsUserWa
 import IUserWaitingListService from "../../../Business/Abstract/IUserWaitingListService";
 import UserWaitingListManager from "../../../Business/Concrete/UserWaitingListManager";
 import UserWaitingListController from "../../Concrete/Controllers/UserWaitingListController";
+import IRPCServer from "../../RPC/IRPCServer";
+import GRPCServer from "../../RPC/GRPC/GRPCServer";
 
 container.registerSingleton<IAuthService>("IAuthService", AuthManager);
 
@@ -28,6 +30,8 @@ container.registerSingleton<ILibraryService>("ILibraryService", LibraryManager);
 
 container.registerSingleton<IUserWaitingListDal>("IUserWaitingListDal", MsUserWaitingListDal);
 container.registerSingleton<IUserWaitingListService>("IUserWaitingListService", UserWaitingListManager);
+
+container.registerSingleton<IRPCServer>("IRPCServer",GRPCServer);
 
 container.registerSingleton(AuthController);
 container.registerSingleton(LibraryController);
