@@ -1,5 +1,5 @@
-import axios from "axios"
 import RedisClient from "../../../DataAccess/Concrete/Redis/RedisClient";
+import GRPCClient from "../../RPC/GRPC/GRPCClient";
 
 export const TokenControl = async (req: any, res: any, next: any) => {
     try {
@@ -17,7 +17,7 @@ export const TokenControl = async (req: any, res: any, next: any) => {
             return next();
         }
 
-        const result = await tokenControlRequest(authorization);
+        const result = await tokenControlRequest(token);
         if (!result.success) return res.status(401).send(result);
         
         await addTokenLog({ token: token, ...result.data });
@@ -30,12 +30,8 @@ export const TokenControl = async (req: any, res: any, next: any) => {
     }
 }
 
-const tokenControlRequest = async (authorization: any) => {
-    const url = process.env.USER_SERVICE + "/auth/tokenControl";
-    const config = {
-        headers: { "Authorization": authorization }
-    }
-    const data = await axios.get(url, config).then(res => res.data).catch(err => err.response.data);
+const tokenControlRequest = async (token: any) => {
+    const data = await GRPCClient.Instance.TokenControl(token);
     return data;
 }
 

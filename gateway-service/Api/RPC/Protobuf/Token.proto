@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package Token;
+
+service TokenService {
+    rpc TokenControl (Token) returns (DataResult);
+}
+
+message DataResult {
+    UserCredentials data = 1;
+    bool success = 2;
+    string message = 3;
+}
+
+message UserCredentials {
+    string email = 1;
+    int32 exp = 2;
+}
+
+message Token {
+    string token = 1;
+}
