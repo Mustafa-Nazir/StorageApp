@@ -14,6 +14,8 @@ This project is a **SaaS** application that allows institutions to store and man
 |Git|
 |TSyringe|
 |Firebase|
+|Redis|
+|gRPC|
 
 # 🔑Features
 * Login/Register
